@@ -53,25 +53,14 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: cover;
-            cursor: pointer;
-            transition: transform 0.3s ease; /* 为图片放大缩小添加过渡效果 */
         }
 
-        /* 进入全屏状态下的图片样式 */
-        .carousel-cell img.mobile-fullscreen {
-            position: fixed;
-            width: 100vw;
-            height: 100vh;
-            max-width: none;
-            max-height: none;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            background-color: black;
-            object-fit: contain;
+        @media (max-width: 600px) {
+            .carousel-cell {
+                padding-bottom: 100%;
+            }
         }
 
-        /* 隐藏多余的导航按钮 */
         .flickity-button {
             background: none !important;
             border: none !important;
@@ -155,6 +144,13 @@
             align-items: center;
             justify-content: center;
         }
+
+        /* 隐藏移动端的全屏图标 */
+        @media (max-width: 768px) {
+            .fullscreen-icon {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -181,7 +177,7 @@
         </button>
 
         <div class="carousel" data-flickity='{ "wrapAround": true, "autoPlay": 3000, "pauseAutoPlayOnHover": true, "pageDots": false, "prevNextButtons": true }'>
-            <!-- 图片列表 -->
+            <!-- 替换后的图片列表 -->
             <div class="carousel-cell">
                 <img src="https://imgur.com/QQGnKn3.jpg" alt="Image 1">
             </div>
@@ -194,16 +190,94 @@
             <div class="carousel-cell">
                 <img src="https://imgur.com/WnePgrw.jpg" alt="Image 4">
             </div>
+            <div class="carousel-cell">
+                <img src="https://imgur.com/QpUZjRf.jpg" alt="Image 5">
+            </div>
+            <div class="carousel-cell">
+                <img src="https://imgur.com/rE6qGtk.jpg" alt="Image 6">
+            </div>
+            <div class="carousel-cell">
+                <img src="https://imgur.com/35SP2XX.jpg" alt="Image 7">
+            </div>
+            <div class="carousel-cell">
+                <img src="https://imgur.com/QY8jzZZ.jpg" alt="Image 8">
+            </div>
+            <div class="carousel-cell">
+                <img src="https://imgur.com/wCJMiIG.jpg" alt="Image 9">
+            </div>
+            <div class="carousel-cell">
+                <img src="https://imgur.com/3sSX9I1.jpg" alt="Image 10">
+            </div>
+            <div class="carousel-cell">
+                <img src="https://imgur.com/3mT4CsG.jpg" alt="Image 11">
+            </div>
+            <div class="carousel-cell">
+                <img src="https://imgur.com/0nXZQ0O.jpg" alt="Image 12">
+            </div>
+            <div class="carousel-cell">
+                <img src="https://imgur.com/NYkTjTl.jpg" alt="Image 13">
+            </div>
+            <div class="carousel-cell">
+                <img src="https://imgur.com/aa5CdJs.jpg" alt="Image 14">
+            </div>
+            <div class="carousel-cell">
+                <img src="https://imgur.com/zwjn8qa.jpg" alt="Image 15">
+            </div>
+            <div class="carousel-cell">
+                <img src="https://imgur.com/WjysGem.jpg" alt="Image 16">
+            </div>
         </div>
+    </div>
+
+    <!-- 定位栏 -->
+    <div class="progress-bar">
+        <div class="progress"></div>
     </div>
 
     <!-- 引入Flickity JavaScript -->
     <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
     <script>
-        const carouselContainer = document.getElementById("carouselContainer");
-        const fullscreenButton = document.getElementById("fullscreenButton");
+        const flkty = new Flickity('.carousel', {
+            wrapAround: true,
+            autoPlay: 3000,
+            pauseAutoPlayOnHover: true,
+            pageDots: false,
+            prevNextButtons: true
+        });
 
-        // 全屏切换功能（桌面端使用）
+        // 进度条动态更新
+        const progressBar = document.querySelector('.progress-bar .progress');
+        flkty.on('scroll', function(progress) {
+            progress = Math.max(0, Math.min(1, progress));
+            progressBar.style.width = `${progress * 100}%`;
+        });
+
+        // 控制箭头和进度条的显示与隐藏
+        const carousel = document.querySelector('.carousel');
+        let hideTimeout;
+
+        function showControls() {
+            clearTimeout(hideTimeout);
+            carousel.querySelectorAll('.flickity-button').forEach(button => button.style.opacity = '0.5');
+            document.querySelector('.progress-bar').style.opacity = '0.7';
+        }
+
+        function hideControls() {
+            hideTimeout = setTimeout(() => {
+                carousel.querySelectorAll('.flickity-button').forEach(button => button.style.opacity = '0');
+                document.querySelector('.progress-bar').style.opacity = '0';
+            }, 2000);
+        }
+
+        carousel.addEventListener('mouseenter', showControls);
+        carousel.addEventListener('mouseleave', hideControls);
+        carousel.addEventListener('touchstart', showControls);
+        carousel.addEventListener('touchend', hideControls);
+
+        // 全屏功能
+        const fullscreenButton = document.getElementById("fullscreenButton");
+        const carouselContainer = document.getElementById("carouselContainer");
+
         function toggleFullScreen() {
             if (!document.fullscreenElement) {
                 carouselContainer.requestFullscreen().catch(err => {
@@ -216,13 +290,14 @@
             }
         }
 
-        // 移动端图片单击全屏效果
-        const images = document.querySelectorAll('.carousel-cell img');
-
-        images.forEach((img) => {
-            img.addEventListener('click', () => {
-                img.classList.toggle('mobile-fullscreen'); // 切换移动端全屏样式
-            });
+        // 隐藏全屏图标功能
+        let iconTimeout;
+        document.addEventListener("mousemove", () => {
+            fullscreenButton.classList.remove("hide-icon");
+            clearTimeout(iconTimeout);
+            iconTimeout = setTimeout(() => {
+                fullscreenButton.classList.add("hide-icon");
+            }, 500);
         });
     </script>
 </body>
