@@ -54,22 +54,9 @@
             max-height: 100%;
             object-fit: cover;
             cursor: pointer;
-            transition: all 0.3s ease; /* 为图片放大缩小添加过渡效果 */
         }
 
-        /* 模拟全屏状态的图片样式 */
-        .carousel-cell img.mobile-fullscreen {
-            position: fixed;
-            width: 100vw;
-            height: 100vh;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            background-color: black;
-            object-fit: contain;
-            cursor: zoom-out;
-        }
-
+        /* 隐藏多余的导航按钮 */
         .flickity-button {
             background: none !important;
             border: none !important;
@@ -93,27 +80,25 @@
             opacity: 0.5 !important;
         }
 
-        .progress-bar {
-            width: 35%;
-            height: 2px;
-            background-color: #ccc;
-            overflow: hidden;
-            margin-top: 30px;
-            opacity: 0;
-            transition: opacity 0.3s;
+        /* 全屏展示图片的覆盖层 */
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
 
-        .progress-bar .progress {
-            width: 0%;
-            height: 100%;
-            background-color: #333;
-            transition: width 0.1s;
-        }
-
-        @media (max-width: 768px) {
-            .flickity-button {
-                display: none !important;
-            }
+        .fullscreen-overlay img {
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+            cursor: zoom-out;
         }
 
         /* 全屏图标样式 */
@@ -142,14 +127,6 @@
 
         .hide-icon {
             opacity: 0 !important;
-        }
-
-        .fullscreen .carousel-container {
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
     </style>
 </head>
@@ -205,11 +182,26 @@
             prevNextButtons: true
         });
 
-        // 切换“全屏”样式
+        // 点击图片全屏展示
         const images = document.querySelectorAll('.carousel-cell img');
+
         images.forEach((img) => {
             img.addEventListener('click', () => {
-                img.classList.toggle('mobile-fullscreen');
+                // 创建全屏覆盖层
+                const overlay = document.createElement('div');
+                overlay.classList.add('fullscreen-overlay');
+
+                // 创建一个新的图片元素
+                const fullImg = document.createElement('img');
+                fullImg.src = img.src;
+                overlay.appendChild(fullImg);
+
+                // 点击覆盖层关闭
+                overlay.addEventListener('click', () => {
+                    document.body.removeChild(overlay);
+                });
+
+                document.body.appendChild(overlay);
             });
         });
 
