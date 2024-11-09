@@ -131,9 +131,11 @@
             height: 20px;
         }
 
-        /* 鼠标不活动时隐藏图标 */
-        .hide-icon {
-            opacity: 0 !important;
+        /* 隐藏移动端的全屏图标 */
+        @media (max-width: 768px) {
+            .fullscreen-icon {
+                display: block !important;
+            }
         }
 
         /* 全屏模式下的样式 */
@@ -143,13 +145,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        /* 隐藏移动端的全屏图标 */
-        @media (max-width: 768px) {
-            .fullscreen-icon {
-                display: none !important;
-            }
         }
     </style>
 </head>
@@ -190,94 +185,16 @@
             <div class="carousel-cell">
                 <img src="https://imgur.com/WnePgrw.jpg" alt="Image 4">
             </div>
-            <div class="carousel-cell">
-                <img src="https://imgur.com/QpUZjRf.jpg" alt="Image 5">
-            </div>
-            <div class="carousel-cell">
-                <img src="https://imgur.com/rE6qGtk.jpg" alt="Image 6">
-            </div>
-            <div class="carousel-cell">
-                <img src="https://imgur.com/35SP2XX.jpg" alt="Image 7">
-            </div>
-            <div class="carousel-cell">
-                <img src="https://imgur.com/QY8jzZZ.jpg" alt="Image 8">
-            </div>
-            <div class="carousel-cell">
-                <img src="https://imgur.com/wCJMiIG.jpg" alt="Image 9">
-            </div>
-            <div class="carousel-cell">
-                <img src="https://imgur.com/3sSX9I1.jpg" alt="Image 10">
-            </div>
-            <div class="carousel-cell">
-                <img src="https://imgur.com/3mT4CsG.jpg" alt="Image 11">
-            </div>
-            <div class="carousel-cell">
-                <img src="https://imgur.com/0nXZQ0O.jpg" alt="Image 12">
-            </div>
-            <div class="carousel-cell">
-                <img src="https://imgur.com/NYkTjTl.jpg" alt="Image 13">
-            </div>
-            <div class="carousel-cell">
-                <img src="https://imgur.com/aa5CdJs.jpg" alt="Image 14">
-            </div>
-            <div class="carousel-cell">
-                <img src="https://imgur.com/zwjn8qa.jpg" alt="Image 15">
-            </div>
-            <div class="carousel-cell">
-                <img src="https://imgur.com/WjysGem.jpg" alt="Image 16">
-            </div>
         </div>
-    </div>
-
-    <!-- 定位栏 -->
-    <div class="progress-bar">
-        <div class="progress"></div>
     </div>
 
     <!-- 引入Flickity JavaScript -->
     <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
     <script>
-        const flkty = new Flickity('.carousel', {
-            wrapAround: true,
-            autoPlay: 3000,
-            pauseAutoPlayOnHover: true,
-            pageDots: false,
-            prevNextButtons: true
-        });
-
-        // 进度条动态更新
-        const progressBar = document.querySelector('.progress-bar .progress');
-        flkty.on('scroll', function(progress) {
-            progress = Math.max(0, Math.min(1, progress));
-            progressBar.style.width = `${progress * 100}%`;
-        });
-
-        // 控制箭头和进度条的显示与隐藏
-        const carousel = document.querySelector('.carousel');
-        let hideTimeout;
-
-        function showControls() {
-            clearTimeout(hideTimeout);
-            carousel.querySelectorAll('.flickity-button').forEach(button => button.style.opacity = '0.5');
-            document.querySelector('.progress-bar').style.opacity = '0.7';
-        }
-
-        function hideControls() {
-            hideTimeout = setTimeout(() => {
-                carousel.querySelectorAll('.flickity-button').forEach(button => button.style.opacity = '0');
-                document.querySelector('.progress-bar').style.opacity = '0';
-            }, 2000);
-        }
-
-        carousel.addEventListener('mouseenter', showControls);
-        carousel.addEventListener('mouseleave', hideControls);
-        carousel.addEventListener('touchstart', showControls);
-        carousel.addEventListener('touchend', hideControls);
-
-        // 全屏功能
-        const fullscreenButton = document.getElementById("fullscreenButton");
         const carouselContainer = document.getElementById("carouselContainer");
+        const fullscreenButton = document.getElementById("fullscreenButton");
 
+        // 全屏切换功能
         function toggleFullScreen() {
             if (!document.fullscreenElement) {
                 carouselContainer.requestFullscreen().catch(err => {
@@ -290,15 +207,12 @@
             }
         }
 
-        // 隐藏全屏图标功能
-        let iconTimeout;
-        document.addEventListener("mousemove", () => {
-            fullscreenButton.classList.remove("hide-icon");
-            clearTimeout(iconTimeout);
-            iconTimeout = setTimeout(() => {
-                fullscreenButton.classList.add("hide-icon");
-            }, 500);
-        });
+        // 检测是否为移动设备
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        
+        if (isMobile) {
+            fullscreenButton.style.display = 'block';  // 显示全屏按钮
+        }
     </script>
 </body>
 </html>
