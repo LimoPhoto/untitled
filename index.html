@@ -14,7 +14,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 10px;
+            margin: 0;
             background-color: transparent;
             flex-direction: column;
             overflow: hidden;
@@ -54,7 +54,7 @@
             max-height: 100%;
             object-fit: cover;
             cursor: pointer;
-            transition: transform 0.3s ease; /* 为图片放大缩小添加过渡效果 */
+            transition: transform 0.3s ease;
         }
 
         /* 进入全屏状态下的图片样式 */
@@ -71,7 +71,6 @@
             object-fit: contain;
         }
 
-        /* 隐藏多余的导航按钮 */
         .flickity-button {
             background: none !important;
             border: none !important;
@@ -134,7 +133,7 @@
             align-items: center;
             justify-content: center;
             transition: opacity 0.3s;
-            opacity: 0.6; /* 初始设置为可见 */
+            opacity: 0.6;
         }
 
         .fullscreen-icon svg {
@@ -142,12 +141,10 @@
             height: 20px;
         }
 
-        /* 鼠标不活动时隐藏图标 */
         .hide-icon {
             opacity: 0 !important;
         }
 
-        /* 全屏模式下的样式 */
         .fullscreen .carousel-container {
             width: 100vw;
             height: 100vh;
@@ -180,7 +177,7 @@
             </svg>
         </button>
 
-        <div class="carousel" data-flickity='{ "wrapAround": true, "autoPlay": 3000, "pauseAutoPlayOnHover": true, "pageDots": false, "prevNextButtons": true }'>
+        <div class="carousel" id="carousel" data-flickity='{ "wrapAround": true, "autoPlay": 3000, "pauseAutoPlayOnHover": true, "pageDots": false, "prevNextButtons": true }'>
             <!-- 图片列表 -->
             <div class="carousel-cell">
                 <img src="https://imgur.com/QQGnKn3.jpg" alt="Image 1">
@@ -200,10 +197,35 @@
     <!-- 引入Flickity JavaScript -->
     <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
     <script>
+        let flickityInstance;
+
+        // 判断设备是否为移动端
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+        // 初始化轮播设置，根据设备类型不同进行不同配置
+        function initFlickity() {
+            const carouselElement = document.querySelector('#carousel');
+            if (flickityInstance) {
+                flickityInstance.destroy();
+            }
+
+            const options = isMobile
+                ? { wrapAround: true, autoPlay: 2000, pauseAutoPlayOnHover: true, pageDots: false, prevNextButtons: false }
+                : { wrapAround: true, autoPlay: 3000, pauseAutoPlayOnHover: true, pageDots: false, prevNextButtons: true };
+
+            flickityInstance = new Flickity(carouselElement, options);
+        }
+
+        // 监听屏幕方向变化
+        window.addEventListener("resize", initFlickity);
+
+        // 初始化
+        initFlickity();
+
+        // 全屏切换功能
         const carouselContainer = document.getElementById("carouselContainer");
         const fullscreenButton = document.getElementById("fullscreenButton");
 
-        // 全屏切换功能（桌面端使用）
         function toggleFullScreen() {
             if (!document.fullscreenElement) {
                 carouselContainer.requestFullscreen().catch(err => {
@@ -218,10 +240,9 @@
 
         // 移动端图片单击全屏效果
         const images = document.querySelectorAll('.carousel-cell img');
-
         images.forEach((img) => {
             img.addEventListener('click', () => {
-                img.classList.toggle('mobile-fullscreen'); // 切换移动端全屏样式
+                img.classList.toggle('mobile-fullscreen');
             });
         });
     </script>
