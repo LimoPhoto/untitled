@@ -299,14 +299,6 @@
                 fullscreenButton.classList.add("hide-icon");
             }, 500);
         });
-
-        // 检测是否为移动设备
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-        // 为移动端添加双击全屏功能
-        if (isMobile) {
-            carouselContainer.addEventListener('dblclick', toggleFullScreen);
-        }
     </script>
 </body>
 </html>
