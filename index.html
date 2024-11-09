@@ -197,13 +197,19 @@
         // 全屏切换功能
         function toggleFullScreen() {
             if (!document.fullscreenElement) {
-                carouselContainer.requestFullscreen().catch(err => {
-                    alert(`全屏失败: ${err.message}`);
+                carouselContainer.requestFullscreen().then(() => {
+                    carouselContainer.classList.add("fullscreen");
+                }).catch(err => {
+                    alert(`您的设备不支持全屏: ${err.message}`);
+                    // 为不支持全屏的设备应用近似效果
+                    carouselContainer.classList.add("fullscreen");
                 });
-                carouselContainer.classList.add("fullscreen");
             } else {
-                document.exitFullscreen();
-                carouselContainer.classList.remove("fullscreen");
+                document.exitFullscreen().then(() => {
+                    carouselContainer.classList.remove("fullscreen");
+                }).catch(() => {
+                    carouselContainer.classList.remove("fullscreen");
+                });
             }
         }
 
