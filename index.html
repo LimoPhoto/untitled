@@ -54,21 +54,20 @@
             max-height: 100%;
             object-fit: cover;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease; /* 为图片放大缩小添加过渡效果 */
         }
 
-        /* 进入全屏状态下的图片样式 */
+        /* 模拟全屏状态的图片样式 */
         .carousel-cell img.mobile-fullscreen {
             position: fixed;
             width: 100vw;
             height: 100vh;
-            max-width: none;
-            max-height: none;
             top: 0;
             left: 0;
             z-index: 1000;
             background-color: black;
             object-fit: contain;
+            cursor: zoom-out;
         }
 
         .flickity-button {
@@ -164,7 +163,7 @@
                     <path d="M22.661,20.5H36c1.104,0,2-0.896,2-2s-0.896-2-2-2H19c-1.104,0-2.5,1.276-2.5,2.381v17c0,1.104,0.896,2,2,2s2-0.896,2-2
                         V24.876l16.042,15.791c0.391,0.391,1.027,0.586,1.539,0.586s1.086-0.195,1.477-0.586c0.781-0.781,0.812-2.237,0.031-3.019
                         L22.661,20.5z"/>
-                    <path d="M83,16.5H66c-1.104,0-2,0.896-2,2s0.896,2,2,2h12.605L61.647,37.648c-0.781,0.781-0.781,2.142,0,2.923
+                    <path d="M83,16.5H66c-1.104,0-2,0.896,2,2s0.896,2,2,2h12.605L61.647,37.648c-0.781,0.781-0.781,2.142,0,2.923
                         c0.39,0.391,0.902,0.633,1.414,0.633s0.774-0.171,1.164-0.562l16.274-16.5v11.738c0,1.104,0.896,2,2,2s2-0.896,2-2v-17
                         C84.5,17.776,84.104,16.5,83,16.5z"/>
                     <path d="M36.542,60.962L20.5,76.754V65.881c0-1.104-0.896-2-2-2s-2,0.896-2,2v17c0,1.104,1.396,1.619,2.5,1.619h17
@@ -197,32 +196,24 @@
     <!-- 引入Flickity JavaScript -->
     <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
     <script>
-        let flickityInstance;
+        // 初始化 Flickity 轮播
+        const flickityInstance = new Flickity('#carousel', {
+            wrapAround: true,
+            autoPlay: 3000,
+            pauseAutoPlayOnHover: true,
+            pageDots: false,
+            prevNextButtons: true
+        });
 
-        // 判断设备是否为移动端
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        // 切换“全屏”样式
+        const images = document.querySelectorAll('.carousel-cell img');
+        images.forEach((img) => {
+            img.addEventListener('click', () => {
+                img.classList.toggle('mobile-fullscreen');
+            });
+        });
 
-        // 初始化轮播设置，根据设备类型不同进行不同配置
-        function initFlickity() {
-            const carouselElement = document.querySelector('#carousel');
-            if (flickityInstance) {
-                flickityInstance.destroy();
-            }
-
-            const options = isMobile
-                ? { wrapAround: true, autoPlay: 2000, pauseAutoPlayOnHover: true, pageDots: false, prevNextButtons: false }
-                : { wrapAround: true, autoPlay: 3000, pauseAutoPlayOnHover: true, pageDots: false, prevNextButtons: true };
-
-            flickityInstance = new Flickity(carouselElement, options);
-        }
-
-        // 监听屏幕方向变化
-        window.addEventListener("resize", initFlickity);
-
-        // 初始化
-        initFlickity();
-
-        // 全屏切换功能
+        // 桌面端全屏切换功能
         const carouselContainer = document.getElementById("carouselContainer");
         const fullscreenButton = document.getElementById("fullscreenButton");
 
@@ -237,14 +228,6 @@
                 carouselContainer.classList.remove("fullscreen");
             }
         }
-
-        // 移动端图片单击全屏效果
-        const images = document.querySelectorAll('.carousel-cell img');
-        images.forEach((img) => {
-            img.addEventListener('click', () => {
-                img.classList.toggle('mobile-fullscreen');
-            });
-        });
     </script>
 </body>
 </html>
