@@ -263,28 +263,33 @@
             pageDots: false,
             prevNextButtons: true
         });
-        // 点击图片全屏展示
-        const images = document.querySelectorAll('.carousel-cell img');
+        // 判断是否为移动设备
+        const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-        images.forEach((img) => {
-            img.addEventListener('click', () => {
-                // 创建全屏覆盖层
-                const overlay = document.createElement('div');
-                overlay.classList.add('fullscreen-overlay');
+        if (isMobileDevice) {
+            // 为每个图片添加双击放大功能（仅在移动端）
+            const images = document.querySelectorAll('.carousel-cell img');
+            images.forEach((img) => {
+                img.addEventListener('dblclick', () => {
+                    // 创建全屏覆盖层
+                    const overlay = document.createElement('div');
+                    overlay.classList.add('fullscreen-overlay');
 
-                // 创建一个新的图片元素
-                const fullImg = document.createElement('img');
-                fullImg.src = img.src;
-                overlay.appendChild(fullImg);
+                    // 创建一个新的图片元素
+                    const fullImg = document.createElement('img');
+                    fullImg.src = img.src;
+                    overlay.appendChild(fullImg);
 
-                // 点击覆盖层关闭
-                overlay.addEventListener('click', () => {
-                    document.body.removeChild(overlay);
+                    // 点击覆盖层关闭
+                    overlay.addEventListener('click', () => {
+                        document.body.removeChild(overlay);
+                    });
+
+                    document.body.appendChild(overlay);
                 });
-
-                document.body.appendChild(overlay);
             });
-        });
+        }
+
 
 
         // 进度条动态更新
