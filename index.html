@@ -175,10 +175,10 @@
         const isMobileDevice = window.matchMedia("(max-width: 768px)").matches;
 
         if (isMobileDevice) {
-            // 为每个图片添加单击放大功能（仅在移动端）
+            // 为每个图片添加双击放大功能（仅在移动端）
             const images = document.querySelectorAll('.carousel-cell img');
             images.forEach((img) => {
-                img.addEventListener('click', () => {
+                img.addEventListener('dblclick', () => {
                     // 创建全屏覆盖层
                     const overlay = document.createElement('div');
                     overlay.classList.add('fullscreen-overlay');
@@ -256,4 +256,3 @@
     </script>
 </body>
 </html>
-
