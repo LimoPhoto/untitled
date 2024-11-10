@@ -263,8 +263,8 @@
             pageDots: false,
             prevNextButtons: true
         });
-        // 判断是否为移动设备
-        const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        // 使用 window.matchMedia 判断是否为移动设备（宽度小于768px）
+        const isMobileDevice = window.matchMedia("(max-width: 768px)").matches;
 
         if (isMobileDevice) {
             // 为每个图片添加双击放大功能（仅在移动端）
@@ -289,7 +289,6 @@
                 });
             });
         }
-
 
 
         // 进度条动态更新
