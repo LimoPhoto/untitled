@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<div><br class="Apple-interchange-newline"><!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -73,6 +73,98 @@
             outline: none !important;
             box-shadow: none !important;
         }
+
+        .flickity-button:focus,
+        .flickity-button:active {
+            background: none !important;
+            box-shadow: none !important;
+        }
+
+        .carousel:hover .flickity-button {
+            opacity: 0.5 !important;
+        }
+
+        .progress-bar {
+            width: 35%;
+            height: 2px;
+            background-color: #ccc;
+            overflow: hidden;
+            margin-top: 30px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .progress-bar .progress {
+            width: 0%;
+            height: 100%;
+            background-color: #333;
+            transition: width 0.1s;
+        }
+
+        @media (max-width: 768px) {
+            .flickity-button {
+                display: none !important;
+            }
+        }
+        /* 全屏展示图片的覆盖层 */
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .fullscreen-overlay img {
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+            cursor: zoom-out;
+        }
+        /* 全屏图标样式 */
+        .fullscreen-icon {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            z-index: 1000;
+            padding: 5px;
+            background-color: transparent;
+            color: black;
+            border: none;
+            cursor: pointer;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.3s;
+            opacity: 0.6; /* 初始设置为可见 */
+        }
+
+        .fullscreen-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* 鼠标不活动时隐藏图标 */
+        .hide-icon {
+            opacity: 0 !important;
+        }
+
+        /* 全屏模式下的样式 */
+        .fullscreen .carousel-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 隐藏移动端的全屏图标 */
         @media (max-width: 768px) {
             .fullscreen-icon {
                 display: none !important;
@@ -255,4 +347,4 @@
         });
     </script>
 </body>
-</html>
+</html></div>
